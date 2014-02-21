@@ -4,10 +4,12 @@ import sys
 import matplotlib.pyplot as plt
 import networkx as nx
 import json
+import heapq as heap
 
 
 # Load data from file given by command line argument
 filename = sys.argv[1]
+N = int(sys.argv[2])
 f = open(filename)
 graph_data = json.load(f)
 f.close()
@@ -40,3 +42,10 @@ def save_graph(graph, save_name):
 
 #Assuming that the graph g has nodes and edges entered
 save_graph(G, filename + '-visualization.pdf')
+
+with open('out.txt') as f:
+    for (node, deg) in heap.nlargest(N, (G.degree_iter(),key=itemgetter(1),reverse=True)):
+        f.write(str(node) + "\n")
+
+    
+    
