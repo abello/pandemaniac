@@ -6,6 +6,7 @@ import networkx as nx
 import json
 import heapq as heap
 from operator import itemgetter
+import numpy as np
 
 
 # Load data from file given by command line argument
@@ -44,9 +45,29 @@ def save_graph(graph, save_name):
 #Assuming that the graph g has nodes and edges entered
 # save_graph(G, filename + '-visualization.pdf')
 
-with open('out.txt', 'w+') as f:
-    for (node, deg) in heap.nlargest(N, sorted(G.degree_iter(),key=itemgetter(1),reverse=True)):
-        f.write(str(node) + "\n")
+# Remove lone nodes
+G.remove_nodes_from(nx.isolated(G))
+
+# Degree centrality
+d = G.degree()
+deg = heap.nlargest(N, d, key = lambda k: d[k])
+
+threshold = np.percentile(d.values(), 70)
+
+# TODO: Filter out nodes with degree less than threshold
+
+# TODO: Calculate load_centrality and communicability centrality
+
+# TODO: Do all of that in parallel
+
+# TODO: Run a simulation of all of them
+
+
+d = nx.betweenness_centrality(G)
+btwn = heap.nlargest(N, d, key = lambda k: d[k])
+
+     
 
     
+with open('out.txt', 'w+') as f:
     

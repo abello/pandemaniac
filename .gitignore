@@ -1,3 +1,5 @@
+graphs/*
+out.txt
 *.py[cod]
 
 # C extensions
