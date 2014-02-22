@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import networkx as nx
 import json
 import heapq as heap
+from operator import itemgetter
 
 
 # Load data from file given by command line argument
@@ -41,10 +42,10 @@ def save_graph(graph, save_name):
 	del fig
 
 #Assuming that the graph g has nodes and edges entered
-save_graph(G, filename + '-visualization.pdf')
+# save_graph(G, filename + '-visualization.pdf')
 
-with open('out.txt') as f:
-    for (node, deg) in heap.nlargest(N, (G.degree_iter(),key=itemgetter(1),reverse=True)):
+with open('out.txt', 'w+') as f:
+    for (node, deg) in heap.nlargest(N, sorted(G.degree_iter(),key=itemgetter(1),reverse=True)):
         f.write(str(node) + "\n")
 
     
