@@ -50,7 +50,7 @@ G.remove_nodes_from(nx.isolates(G))
 
 # Degree centrality
 d = G.degree()
-sorted_deg_nodes = heap.nlargest(N, d, key = lambda k: d[k])
+sorted_deg_nodes = heap.nlargest(N * 10, d, key = lambda k: d[k])
 
 #threshold = np.percentile(d.values(), 70)
 
@@ -66,6 +66,9 @@ for node in sorted_deg_nodes:
 
     if not is_a_neighbor:
         good_choices.append(node)
+
+    if len(good_choices) == N:
+        break
 
 print good_choices
 
