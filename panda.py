@@ -50,14 +50,15 @@ G.remove_nodes_from(nx.isolates(G))
 
 # Degree centrality
 d = G.degree()
+print d
 deg = heap.nlargest(N, d, key = lambda k: d[k])
 
 threshold = np.percentile(d.values(), 70)
 
 # TODO: Filter out nodes with degree less than threshold
-good_choices = G.nodes()
-for node in G.nodes():
-	if G.degree(node) < threshold:
+good_choices = d.keys()
+for node in d:
+	if d[node] < threshold:
 		good_choices.remove(node)
 
 
