@@ -52,28 +52,32 @@ G.remove_nodes_from(nx.isolates(G))
 # Degree centrality
 d = G.degree()
 sorted_deg_nodes = heap.nlargest(N * 40, d, key = lambda k: d[k])
-good_choices = []
+spaced_high_degree_nodes = []
 
 for node in sorted_deg_nodes:
     is_a_neighbor = False
 
-    for gc in good_choices:
+    for gc in spaced_high_degree_nodes:
         if node in G.neighbors(gc):
             is_a_neighbor = True
             break
 
     if not is_a_neighbor:
-        good_choices.append(node)
+        spaced_high_degree_nodes.append(node)
 
-    if len(good_choices) == N:
+    if len(spaced_high_degree_nodes) == N:
         break
 
-for choice in good_choices:
+for choice in spaced_high_degree_nodes:
     print choice
 
+print "-" * 20
+print "strategies:"
 
-
-
+graph = nx.to_dict_of_lists(G)
+nodes = {"spaced_high_degrees": spaced_high_degree_nodes, "high_degrees": sorted_deg_nodes[:N]}
+s = sim.run(graph, nodes)
+print s
 
 
 # TODO: Calculate load_centrality and communicability centrality
