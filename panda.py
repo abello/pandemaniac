@@ -12,7 +12,7 @@ import sim
 
 # Load data from file given by command line argument
 filename = sys.argv[1]
-N = int(sys.argv[2])
+N = int(filename.split('.')[-3])
 f = open(filename)
 graph_data = json.load(f)
 f.close()
