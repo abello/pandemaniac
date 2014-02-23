@@ -52,7 +52,7 @@ G.remove_nodes_from(nx.isolates(G))
 
 # Degree centrality
 d = G.degree()
-sorted_deg_nodes = heap.nlargest(N * 40, d, key = lambda k: d[k])
+sorted_deg_nodes = sorted(d.keys(), key=lambda k: d[k], reverse=True)
 high_degree_nodes = sorted_deg_nodes[:N]
 spaced_high_degree_nodes = []
 
@@ -76,11 +76,16 @@ print "spaced high degree nodes:"
 for choice in spaced_high_degree_nodes:
     print choice
 
+for choice in spaced_high_degree_nodes:
+    print "degree: " + str(d[choice]) + ". node: " + choice
+
 
 print "-" * 20
 print "high degree nodes:"
 for node in high_degree_nodes:
     print node
+for node in high_degree_nodes:
+    print "degree: " + str(d[node]) + ". node: " + node
 
 
 print "-" * 20
