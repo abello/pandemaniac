@@ -19,28 +19,28 @@ f.close()
 G = nx.from_dict_of_lists(graph_data)
 
 def save_graph(graph, save_name):
-	'''
-	Saves networkx graph "graph" as pdf named "save_name"
-	Source: http://stackoverflow.com/a/17388676
-	'''
+    '''
+    Saves networkx graph "graph" as pdf named "save_name"
+    Source: http://stackoverflow.com/a/17388676
+    '''
 
-	#initialze Figure
-	plt.figure(num=None, figsize=(20, 20), dpi=80)
-	plt.axis('off')
-	fig = plt.figure(1)
-	pos = nx.spring_layout(graph)
-	nx.draw_networkx_nodes(graph,pos)
-	nx.draw_networkx_edges(graph,pos)
-	nx.draw_networkx_labels(graph,pos)
+    #initialze Figure
+    plt.figure(num=None, figsize=(20, 20), dpi=80)
+    plt.axis('off')
+    fig = plt.figure(1)
+    pos = nx.spring_layout(graph)
+    nx.draw_networkx_nodes(graph,pos)
+    nx.draw_networkx_edges(graph,pos)
+    nx.draw_networkx_labels(graph,pos)
 
-	cut = 1.00
-	xmax = cut * max(xx for xx, yy in pos.values())
-	ymax = cut * max(yy for xx, yy in pos.values())
-	plt.xlim(0, xmax)
-	plt.ylim(0, ymax)
+    cut = 1.00
+    xmax = cut * max(xx for xx, yy in pos.values())
+    ymax = cut * max(yy for xx, yy in pos.values())
+    plt.xlim(0, xmax)
+    plt.ylim(0, ymax)
 
-	plt.savefig(save_name, bbox_inches="tight")
-	del fig
+    plt.savefig(save_name, bbox_inches="tight")
+    del fig
 
 #Assuming that the graph g has nodes and edges entered
 # save_graph(G, filename + '-visualization.pdf')
@@ -57,15 +57,15 @@ sorted_deg_nodes = heap.nlargest(N, d, key = lambda k: d[k])
 # TODO: Filter out nodes with degree less than threshold
 good_choices = []
 for node in sorted_deg_nodes:
-	is_a_neighbor = False
+    is_a_neighbor = False
 
-	for gc in good_choices:
-		if node in G.neighbors(gc):
-			is_a_neighbor = True
-			break
+    for gc in good_choices:
+        if node in G.neighbors(gc):
+            is_a_neighbor = True
+            break
 
-	if not is_a_neighbor:
-		good_choices.append(node)
+    if not is_a_neighbor:
+        good_choices.append(node)
 
 print good_choices
 
