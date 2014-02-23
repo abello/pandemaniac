@@ -48,14 +48,12 @@ def save_graph(graph, save_name):
 # Remove lone nodes
 G.remove_nodes_from(nx.isolates(G))
 
+
 # Degree centrality
 d = G.degree()
-sorted_deg_nodes = heap.nlargest(N * 10, d, key = lambda k: d[k])
-
-#threshold = np.percentile(d.values(), 70)
-
-# TODO: Filter out nodes with degree less than threshold
+sorted_deg_nodes = heap.nlargest(N * 40, d, key = lambda k: d[k])
 good_choices = []
+
 for node in sorted_deg_nodes:
     is_a_neighbor = False
 
@@ -70,7 +68,9 @@ for node in sorted_deg_nodes:
     if len(good_choices) == N:
         break
 
-print good_choices
+for choice in good_choices:
+    print choice
+
 
 
 
