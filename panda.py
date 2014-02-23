@@ -50,16 +50,27 @@ G.remove_nodes_from(nx.isolates(G))
 
 # Degree centrality
 d = G.degree()
-print d
-deg = heap.nlargest(N, d, key = lambda k: d[k])
+sorted_deg_nodes = heap.nlargest(N, d, key = lambda k: d[k])
 
-threshold = np.percentile(d.values(), 70)
+#threshold = np.percentile(d.values(), 70)
 
 # TODO: Filter out nodes with degree less than threshold
-good_choices = d.keys()
-for node in d:
-	if d[node] < threshold:
-		good_choices.remove(node)
+good_choices = []
+for node in sorted_deg_nodes:
+	is_a_neighbor = False
+
+	for gc in good_choices:
+		if node in G.neighbors(gc):
+			is_a_neighbor = True
+			break
+
+	if not is_a_neighbor:
+		good_choices.append(node)
+
+print good_choices
+
+
+
 
 
 # TODO: Calculate load_centrality and communicability centrality
