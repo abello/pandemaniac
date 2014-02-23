@@ -7,6 +7,7 @@ import json
 import heapq as heap
 from operator import itemgetter
 import numpy as np
+import sim
 
 
 # Load data from file given by command line argument
@@ -70,6 +71,7 @@ for node in sorted_deg_nodes:
 
 for choice in spaced_high_degree_nodes:
     print choice
+
 
 print "-" * 20
 print "strategies:"
