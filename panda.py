@@ -55,9 +55,10 @@ deg = heap.nlargest(N, d, key = lambda k: d[k])
 threshold = np.percentile(d.values(), 70)
 
 # TODO: Filter out nodes with degree less than threshold
+good_choices = G.nodes()
 for node in G.nodes():
 	if G.degree(node) < threshold:
-		G.remove_node(node)
+		good_choices.remove(node)
 
 
 # TODO: Calculate load_centrality and communicability centrality
