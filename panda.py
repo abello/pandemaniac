@@ -53,6 +53,7 @@ G.remove_nodes_from(nx.isolates(G))
 # Degree centrality
 d = G.degree()
 sorted_deg_nodes = heap.nlargest(N * 40, d, key = lambda k: d[k])
+high_degree_nodes = sorted_deg_nodes[:N]
 spaced_high_degree_nodes = []
 
 for node in sorted_deg_nodes:
@@ -69,15 +70,24 @@ for node in sorted_deg_nodes:
     if len(spaced_high_degree_nodes) == N:
         break
 
+print "-" * 20
+print "spaced high degree nodes:"
+
 for choice in spaced_high_degree_nodes:
     print choice
+
+
+print "-" * 20
+print "high degree nodes:"
+for node in high_degree_nodes:
+    print node
 
 
 print "-" * 20
 print "strategies:"
 
 graph = nx.to_dict_of_lists(G)
-nodes = {"spaced_high_degrees": spaced_high_degree_nodes, "high_degrees": sorted_deg_nodes[:N]}
+nodes = {"spaced_high_degrees": spaced_high_degree_nodes, "high_degrees": high_degree_nodes}
 s = sim.run(graph, nodes)
 print s
 
