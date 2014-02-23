@@ -54,47 +54,11 @@ G.remove_nodes_from(nx.isolates(G))
 d = G.degree()
 sorted_deg_nodes = sorted(d.keys(), key=lambda k: d[k], reverse=True)
 high_degree_nodes = sorted_deg_nodes[:N]
-spaced_high_degree_nodes = []
-
-for node in sorted_deg_nodes:
-    is_a_neighbor = False
-
-    for gc in spaced_high_degree_nodes:
-        if node in G.neighbors(gc):
-            is_a_neighbor = True
-            break
-
-    if not is_a_neighbor:
-        spaced_high_degree_nodes.append(node)
-
-    if len(spaced_high_degree_nodes) == N:
-        break
-
-print "-" * 20
-print "spaced high degree nodes:"
-
-for choice in spaced_high_degree_nodes:
-    print choice
-
-for choice in spaced_high_degree_nodes:
-    print "degree: " + str(d[choice]) + ". node: " + choice
 
 
-print "-" * 20
-print "high degree nodes:"
 for node in high_degree_nodes:
     print node
-for node in high_degree_nodes:
-    print "degree: " + str(d[node]) + ". node: " + node
 
-
-print "-" * 20
-print "strategies:"
-
-graph = nx.to_dict_of_lists(G)
-nodes = {"spaced_high_degrees": spaced_high_degree_nodes, "high_degrees": high_degree_nodes}
-s = sim.run(graph, nodes)
-print s
 
 
 # TODO: Calculate load_centrality and communicability centrality
