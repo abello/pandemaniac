@@ -46,7 +46,7 @@ def save_graph(graph, save_name):
 # save_graph(G, filename + '-visualization.pdf')
 
 # Remove lone nodes
-G.remove_nodes_from(nx.isolated(G))
+G.remove_nodes_from(nx.isolates(G))
 
 # Degree centrality
 d = G.degree()
@@ -55,6 +55,10 @@ deg = heap.nlargest(N, d, key = lambda k: d[k])
 threshold = np.percentile(d.values(), 70)
 
 # TODO: Filter out nodes with degree less than threshold
+for node in G.nodes():
+	if G.degree(node) < threshold:
+		G.remove_node(node)
+
 
 # TODO: Calculate load_centrality and communicability centrality
 
@@ -63,11 +67,11 @@ threshold = np.percentile(d.values(), 70)
 # TODO: Run a simulation of all of them
 
 
-d = nx.betweenness_centrality(G)
-btwn = heap.nlargest(N, d, key = lambda k: d[k])
+#d = nx.betweenness_centrality(G)
+#btwn = heap.nlargest(N, d, key = lambda k: d[k])
 
      
 
     
-with open('out.txt', 'w+') as f:
+#with open('out.txt', 'w+') as f:
     
