@@ -8,6 +8,7 @@ import heapq as heap
 from operator import itemgetter
 import numpy as np
 import sim
+from multiprocessing import Pool, Manager, Lock
 
 
 # Load data from file given by command line argument
@@ -92,34 +93,42 @@ G.remove_nodes_from(nx.isolates(G))
 # print "-" * 20
 # print "strategies:"
 
-d = nx.load_centrality(G)
-sorted_centrality_nodes = sorted(d.keys(), key=lambda k: d[k], reverse=True)
-load_centrality_nodes = sorted_centrality_nodes[:N]
+# d = nx.load_centrality(G)
+# sorted_centrality_nodes = sorted(d.keys(), key=lambda k: d[k], reverse=True)
+# load_centrality_nodes = sorted_centrality_nodes[:N]
 
-d = nx.communicability_centrality(G)
-sorted_centrality_nodes = sorted(d.keys(), key=lambda k: d[k], reverse=True)
-comm_centrality_nodes = sorted_centrality_nodes[:N]
+# d = nx.communicability_centrality(G)
+# sorted_centrality_nodes = sorted(d.keys(), key=lambda k: d[k], reverse=True)
+# comm_centrality_nodes = sorted_centrality_nodes[:N]
 
 # for node in load_centrality_nodes:
 #     print node
 
+def load_c(n):
+    val = nx.load_centrality(G, n)
+    print "adding"
+    d[n] = val
 
-graph = nx.to_dict_of_lists(G)
-nodes = {"load_centrality": sorted_centrality_nodes, "comm_centrality": comm_centrality_nodes}
-s = sim.run(graph, nodes)
-print s
+    
+manager = Manager()
+d = manager.dict()
+l = Lock()
+pool = Pool()
+
+nodes = G.nodes()
+
+pool.map(load_c, nodes)
+pool.close()
+pool.join()
+
+print d
 
 
-# TODO: Do all of that in parallel
-
-# TODO: Run a simulation of all of them
+# graph = nx.to_dict_of_lists(G)
+# nodes = {"load_centrality": sorted_centrality_nodes, "comm_centrality": comm_centrality_nodes}
+# s = sim.run(graph, nodes)
+# print s
 
 
 #d = nx.betweenness_centrality(G)
 #btwn = heap.nlargest(N, d, key = lambda k: d[k])
-
-     
-
-    
-#with open('out.txt', 'w+') as f:
-    
