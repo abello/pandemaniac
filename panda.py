@@ -93,9 +93,9 @@ G.remove_nodes_from(nx.isolates(G))
 # print "-" * 20
 # print "strategies:"
 
-# d = nx.load_centrality(G)
-# sorted_centrality_nodes = sorted(d.keys(), key=lambda k: d[k], reverse=True)
-# load_centrality_nodes = sorted_centrality_nodes[:N]
+d = nx.closeness_centrality(G)
+sorted_centrality_nodes = sorted(d.keys(), key=lambda k: d[k], reverse=True)
+deg_centrality_nodes = sorted_centrality_nodes[:N]
 
 # d = nx.communicability_centrality(G)
 # sorted_centrality_nodes = sorted(d.keys(), key=lambda k: d[k], reverse=True)
@@ -106,15 +106,15 @@ d = betweenness_centrality.betweenness_centrality_parallel(G)
 sorted_centrality_nodes = sorted(d.keys(), key=lambda k: d[k], reverse=True)
 btwn_centrality_nodes = sorted_centrality_nodes[:N]
 
-for node in btwn_centrality_nodes:
-    print node
+# for node in btwn_centrality_nodes:
+#     print node
 
 
 
-# graph = nx.to_dict_of_lists(G)
-# nodes = {"load_centrality": sorted_centrality_nodes, "comm_centrality": comm_centrality_nodes}
-# s = sim.run(graph, nodes)
-# print s
+graph = nx.to_dict_of_lists(G)
+nodes = {"btwn_centrality": btwn_centrality_nodes, "closeness_centrality": deg_centrality_nodes}
+s = sim.run(graph, nodes)
+print s
 
 
 #d = nx.betweenness_centrality(G)
