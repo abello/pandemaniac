@@ -8,7 +8,7 @@ import heapq as heap
 from operator import itemgetter
 import numpy as np
 import sim
-from multiprocessing import Pool, Manager, Lock
+import betweenness_centrality
 
 
 # Load data from file given by command line argument
@@ -101,27 +101,14 @@ G.remove_nodes_from(nx.isolates(G))
 # sorted_centrality_nodes = sorted(d.keys(), key=lambda k: d[k], reverse=True)
 # comm_centrality_nodes = sorted_centrality_nodes[:N]
 
-# for node in load_centrality_nodes:
-#     print node
 
-def load_c(n):
-    val = nx.load_centrality(G, n)
-    print "adding"
-    d[n] = val
+d = betweenness_centrality.betweenness_centrality_parallel(G)
+sorted_centrality_nodes = sorted(d.keys(), key=lambda k: d[k], reverse=True)
+btwn_centrality_nodes = sorted_centrality_nodes[:N]
 
-    
-manager = Manager()
-d = manager.dict()
-l = Lock()
-pool = Pool()
+for node in btwn_centrality_nodes:
+    print node
 
-nodes = G.nodes()
-
-pool.map(load_c, nodes)
-pool.close()
-pool.join()
-
-print d
 
 
 # graph = nx.to_dict_of_lists(G)
