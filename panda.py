@@ -51,9 +51,10 @@ G.remove_nodes_from(nx.isolates(G))
 
 
 # Degree centrality
-d = G.degree()
-sorted_deg_nodes = sorted(d.keys(), key=lambda k: d[k], reverse=True)
-high_degree_nodes = sorted_deg_nodes[:N]
+# d = G.degree()
+# sorted_deg_nodes = sorted(d.keys(), key=lambda k: d[k], reverse=True)
+# high_degree_nodes = sorted_deg_nodes[:N]
+
 # spaced_high_degree_nodes = []
 
 # for node in sorted_deg_nodes:
@@ -82,8 +83,8 @@ high_degree_nodes = sorted_deg_nodes[:N]
 
 # print "-" * 20
 # print "high degree nodes:"
-for node in high_degree_nodes:
-    print node
+# for node in high_degree_nodes:
+#     print node
 # for node in high_degree_nodes:
 #     print "degree: " + str(d[node]) + ". node: " + node
 
@@ -91,13 +92,23 @@ for node in high_degree_nodes:
 # print "-" * 20
 # print "strategies:"
 
-# graph = nx.to_dict_of_lists(G)
-# nodes = {"spaced_high_degrees": spaced_high_degree_nodes, "high_degrees": high_degree_nodes}
-# s = sim.run(graph, nodes)
-# print s
+d = nx.load_centrality(G)
+sorted_centrality_nodes = sorted(d.keys(), key=lambda k: d[k], reverse=True)
+load_centrality_nodes = sorted_centrality_nodes[:N]
+
+d = nx.communicability_centrality(G)
+sorted_centrality_nodes = sorted(d.keys(), key=lambda k: d[k], reverse=True)
+comm_centrality_nodes = sorted_centrality_nodes[:N]
+
+# for node in load_centrality_nodes:
+#     print node
 
 
-# TODO: Calculate load_centrality and communicability centrality
+graph = nx.to_dict_of_lists(G)
+nodes = {"load_centrality": sorted_centrality_nodes, "comm_centrality": comm_centrality_nodes}
+s = sim.run(graph, nodes)
+print s
+
 
 # TODO: Do all of that in parallel
 
