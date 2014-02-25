@@ -54,7 +54,11 @@ par_closeness_centrality_nodes = sorted_centrality_nodes[:N]
 for node in par_closeness_centrality_nodes:
     print node
 
+# d = nx.degree_centrality(G)
+# sorted_centrality_nodes = sorted(d.keys(), key=lambda k: d[k], reverse=True)
+# deg_centrality_nodes = sorted_centrality_nodes[:N]
+# 
 # graph = nx.to_dict_of_lists(G)
-# nodes = {"par_closeness_centrality": par_closeness_centrality_nodes, "closeness_centrality": deg_centrality_nodes}
+# nodes = {"par_closeness_centrality": par_closeness_centrality_nodes, "degree_centrality": deg_centrality_nodes}
 # s = sim.run(graph, nodes)
 # print s
