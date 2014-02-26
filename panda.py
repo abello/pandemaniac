@@ -29,33 +29,9 @@ G = nx.from_dict_of_lists(graph_data)
 G.remove_nodes_from(nx.isolates(G))
 
 
-# d = nx.closeness_centrality(G)
-# sorted_centrality_nodes = sorted(d.keys(), key=lambda k: d[k], reverse=True)
-# deg_centrality_nodes = sorted_centrality_nodes[:N]
+d = nx.closeness_centrality(G)
 
 
-
-
-
-# Parallelized closeness centrality calculations
-
-def calc_closeness(n):
-    val = nx.closeness_centrality(G, n)
-    l.acquire()
-    d[n] = val
-    l.release()
-
-
-m = Manager()
-d = m.dict()   # Centrality dictionary
-l = Lock()
-p = Pool()
-
-all_nodes = G.nodes()
-
-p.map(calc_closeness, all_nodes)
-p.close()
-p.join()
 
 sorted_centrality_nodes = sorted(d.keys(), key=lambda k: d[k], reverse=True)
 best1 = random.sample(sorted_centrality_nodes[:N], int(0.4 * N))
