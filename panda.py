@@ -61,11 +61,6 @@ p.join()
 sorted_centrality_nodes = sorted(d.keys(), key=lambda k: d[k], reverse=True)
 par_closeness_centrality_nodes = sorted_centrality_nodes[:N]
 
-b = sorted_centrality_nodes[:N]
-bs = sorted_centrality_nodes[:N]
-bx = []
-b1 = sorted_centrality_nodes[(1 * N):(1 * N + N)]
-b2 = sorted_centrality_nodes[(2 * N):(2 * N + N)]
 
 # c = 0
 # for node in b:
@@ -103,9 +98,15 @@ if num_nodes_to_surround * SURROUNDING_NEIGHBORS != N:
             final_list.append(node)
             break
 
-for node in final_list:
-    print node
+# for node in final_list:
+#     print node
 
+# b = sorted_centrality_nodes[:N]
+# bs = sorted_centrality_nodes[:N]
+bx = final_list
+b1 = sorted_centrality_nodes[(1 * N):(1 * N + N)]
+# bs1 = sorted_centrality_nodes[(1 * N + 17):(1 * N + N)]
+b2 = sorted_centrality_nodes[(2 * N):(2 * N + N)]
 
 # for node in sorted_centrality_nodes[(i * N):(i * N + N)]:
 
@@ -120,7 +121,9 @@ for node in final_list:
 
 
 
-# graph = nx.to_dict_of_lists(G)
-# nodes = {"b": b, "b1": b1, "b2": b2, "bs":bs, "bx":bx}
-# s = sim.run(graph, nodes)
-# print s
+graph = nx.to_dict_of_lists(G)
+# nodes = {"b": b, "b1": b1, "b2": b2, "bs":bs, "bx":bx, "bs1" : bs1}
+# nodes = {"b1": b1, "b2": b2,"bx":bx, "b":b, "bs":bs}
+nodes = {"b1": b1, "b2": b2,"bx":bx}
+s = sim.run(graph, nodes)
+print s
