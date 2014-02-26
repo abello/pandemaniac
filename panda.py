@@ -12,10 +12,12 @@ import betweenness_centrality
 from multiprocessing import Pool, Manager, Lock
 
 
+SURROUNDING_NEIGHBORS = 2
+
 # Load data from file given by command line argument
 filename = sys.argv[1]
 N = int(filename.split('.')[-3])
-i = int(sys.argv[2])
+# i = int(sys.argv[2])
 f = open(filename)
 graph_data = json.load(f)
 f.close()
@@ -30,6 +32,12 @@ G.remove_nodes_from(nx.isolates(G))
 # sorted_centrality_nodes = sorted(d.keys(), key=lambda k: d[k], reverse=True)
 # deg_centrality_nodes = sorted_centrality_nodes[:N]
 
+
+
+
+
+# Parallelized closeness centrality calculations
+
 def calc_closeness(n):
     val = nx.closeness_centrality(G, n)
     l.acquire()
@@ -38,19 +46,20 @@ def calc_closeness(n):
 
 
 m = Manager()
-d = m.dict()
+d = m.dict()   # Centrality dictionary
 l = Lock()
 p = Pool()
 
-nodes = G.nodes()
-p.map(calc_closeness, nodes)
+all_nodes = G.nodes()
+
+p.map(calc_closeness, all_nodes)
 p.close()
 p.join()
 
 
 
 sorted_centrality_nodes = sorted(d.keys(), key=lambda k: d[k], reverse=True)
-# par_closeness_centrality_nodes = sorted_centrality_nodes[:]
+par_closeness_centrality_nodes = sorted_centrality_nodes[:N]
 
 b = sorted_centrality_nodes[:N]
 bs = sorted_centrality_nodes[:N]
@@ -71,8 +80,34 @@ b2 = sorted_centrality_nodes[(2 * N):(2 * N + N)]
 #             bx.append(neighbor)
 # 
 
-for node in sorted_centrality_nodes[(i * N):(i * N + N)]:
+def best_n_neighbors(nodes, n):
+    good_nodes = []
+    for node in nodes:
+        best_neighbors = sorted(G.neighbors(node), key=lambda k:d[k], reverse=True)
+        num_added = 0
+        for neighbor in best_neighbors:
+            if num_added == n:
+                break
+            if neighbor not in good_nodes:
+                good_nodes.append(neighbor)
+                num_added += 1
+    return good_nodes
+
+
+
+num_nodes_to_surround = N / SURROUNDING_NEIGHBORS
+final_list = best_n_neighbors(par_closeness_centrality_nodes[:num_nodes_to_surround], SURROUNDING_NEIGHBORS)
+if num_nodes_to_surround * SURROUNDING_NEIGHBORS != N:
+    for node in sorted_centrality_nodes[N:]:
+        if node not in final_list:
+            final_list.append(node)
+            break
+
+for node in final_list:
     print node
+
+
+# for node in sorted_centrality_nodes[(i * N):(i * N + N)]:
 
 # d = nx.degree_centrality(G)
 # sorted_centrality_nodes = sorted(d.keys(), key=lambda k: d[k], reverse=True)
