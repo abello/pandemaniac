@@ -10,6 +10,7 @@ import numpy as np
 import sim
 import betweenness_centrality
 from multiprocessing import Pool, Manager, Lock
+import random
 
 
 SURROUNDING_NEIGHBORS = 2
@@ -56,59 +57,21 @@ p.map(calc_closeness, all_nodes)
 p.close()
 p.join()
 
-
-
 sorted_centrality_nodes = sorted(d.keys(), key=lambda k: d[k], reverse=True)
-par_closeness_centrality_nodes = sorted_centrality_nodes[:N]
+best1 = random.sample(sorted_centrality_nodes[:N], int(0.4 * N))
+best2 = random.sample(sorted_centrality_nodes[N:N + N], int(0.3 * N))
+best3 = random.sample(sorted_centrality_nodes[N + N:N + N + N], int(0.3 * N))
 
+alll = best1 + best2 + best3
 
-# c = 0
-# for node in b:
-#     if len(bx) == N:
-#         break
-#     c = 0
-#     for neighbor in G.neighbors(node):
-#         if c == 2:
-#             break
-#         if neighbor not in b:
-#             c += 1
-#             bx.append(neighbor)
-# 
-
-def best_n_neighbors(nodes, n):
-    good_nodes = []
-    for node in nodes:
-        best_neighbors = sorted(G.neighbors(node), key=lambda k:d[k], reverse=True)
-        num_added = 0
-        for neighbor in best_neighbors:
-            if num_added == n:
-                break
-            if neighbor not in good_nodes and node not in par_closeness_centrality_nodes:
-                good_nodes.append(neighbor)
-                num_added += 1
-    return good_nodes
-
-
-
-num_nodes_to_surround = N / SURROUNDING_NEIGHBORS
-final_list = best_n_neighbors(par_closeness_centrality_nodes[:num_nodes_to_surround], SURROUNDING_NEIGHBORS)
-if num_nodes_to_surround * SURROUNDING_NEIGHBORS != N:
-    for node in sorted_centrality_nodes[N:]:
-        if node not in final_list and node not in par_closeness_centrality_nodes:
-            final_list.append(node)
+if len(alll) < N:
+    for node in sorted_centrality_nodes[N + N + N:N + N + N + N]:
+        alll.append(node)
+        if len(alll) == N:
             break
+for node in alll:
+    print node
 
-# for node in final_list:
-#     print node
-
-# b = sorted_centrality_nodes[:N]
-# bs = sorted_centrality_nodes[:N]
-bx = final_list
-b1 = sorted_centrality_nodes[(1 * N):(1 * N + N)]
-# bs1 = sorted_centrality_nodes[(1 * N + 17):(1 * N + N)]
-b2 = sorted_centrality_nodes[(2 * N):(2 * N + N)]
-
-# for node in sorted_centrality_nodes[(i * N):(i * N + N)]:
 
 # d = nx.degree_centrality(G)
 # sorted_centrality_nodes = sorted(d.keys(), key=lambda k: d[k], reverse=True)
@@ -119,11 +82,3 @@ b2 = sorted_centrality_nodes[(2 * N):(2 * N + N)]
 # s = sim.run(graph, nodes)
 # print s
 
-
-
-graph = nx.to_dict_of_lists(G)
-# nodes = {"b": b, "b1": b1, "b2": b2, "bs":bs, "bx":bx, "bs1" : bs1}
-# nodes = {"b1": b1, "b2": b2,"bx":bx, "b":b, "bs":bs}
-nodes = {"b1": b1, "b2": b2,"bx":bx}
-s = sim.run(graph, nodes)
-print s
