@@ -12,6 +12,8 @@ import betweenness_centrality
 from multiprocessing import Pool, Manager, Lock
 
 
+SURROUNDING_NEIGHBORS = 2
+
 # Load data from file given by command line argument
 filename = sys.argv[1]
 N = int(filename.split('.')[-3])
@@ -29,20 +31,24 @@ G.remove_nodes_from(nx.isolates(G))
 # sorted_centrality_nodes = sorted(d.keys(), key=lambda k: d[k], reverse=True)
 # deg_centrality_nodes = sorted_centrality_nodes[:N]
 
+
+m = Manager()
+d = m.dict()   # Centrality dictionary
+l = Lock()
+p = Pool()
+
+all_nodes = G.nodes()
+
+
+# Parallelized closeness centrality calculations
+
 def calc_closeness(n):
     val = nx.closeness_centrality(G, n)
     l.acquire()
     d[n] = val
     l.release()
 
-
-m = Manager()
-d = m.dict()
-l = Lock()
-p = Pool()
-
-nodes = G.nodes()
-p.map(calc_closeness, nodes)
+p.map(calc_closeness, all_nodes)
 p.close()
 p.join()
 
@@ -51,7 +57,30 @@ p.join()
 sorted_centrality_nodes = sorted(d.keys(), key=lambda k: d[k], reverse=True)
 par_closeness_centrality_nodes = sorted_centrality_nodes[:N]
 
-for node in par_closeness_centrality_nodes:
+
+def best_n_neighbors(nodes, n):
+    good_nodes = []
+    for node in nodes:
+        best_neighbors = sorted(G.neighbors(node), key=lambda k:d[k], reverse=True)
+        num_added = 0
+        for neighbor in best_neighbors:
+            if num_added > n:
+                break
+            if neighbor not in good_nodes:
+                good_nodes.append(neighbor)
+                num_added += 1
+
+
+
+num_nodes_to_surround = N / SURROUNDING_NEIGHBORS
+final_list = best_n_neighbors(par_closeness_centrality_nodes[:num_nodes_to_surround], SURROUNDING_NEIGHBORS)
+if num_to_surround * SURROUNDING_NEIGHBORS != N:
+    for node in sorted_centrality_nodes[num_nodes_to_surround:]:
+        if node not in final_list:
+            final_list.append(node)
+            break
+
+for node in final_list:
     print node
 
 # d = nx.degree_centrality(G)
