@@ -83,7 +83,7 @@ def best_n_neighbors(nodes, n):
         for neighbor in best_neighbors:
             if num_added == n:
                 break
-            if neighbor not in good_nodes:
+            if neighbor not in good_nodes and node not in par_closeness_centrality_nodes:
                 good_nodes.append(neighbor)
                 num_added += 1
     return good_nodes
@@ -94,7 +94,7 @@ num_nodes_to_surround = N / SURROUNDING_NEIGHBORS
 final_list = best_n_neighbors(par_closeness_centrality_nodes[:num_nodes_to_surround], SURROUNDING_NEIGHBORS)
 if num_nodes_to_surround * SURROUNDING_NEIGHBORS != N:
     for node in sorted_centrality_nodes[N:]:
-        if node not in final_list:
+        if node not in final_list and node not in par_closeness_centrality_nodes:
             final_list.append(node)
             break
 
